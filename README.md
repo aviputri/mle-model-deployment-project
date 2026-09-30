@@ -1,3 +1,31 @@
+## Scripts
+
+- `notebooks/01.experioments.ipynb`: Jupyter notebook for experimenting the codes
+- `src/features.py`: Reusable data preparation
+- `src/train.py`: Train and predict model
+- `app/main.py` and `schemas.py`: FastAPI application and prediction schema.
+
+## Results
+
+**The RMSE of my final model**
+
+The final RandomForestRegressor (100 trees, max_depth=20, min_samples_leaf=5) achieves a validation RMSE of **4.304** minutes, trained on the January 2025 NYC Yellow Taxi dataset after cleaning.
+
+## Data Cleaning Notes
+
+The Taxi data needed filtering before training:
+
+- `duration_minutes` (computed from pickup/dropoff timestamps) included values ranging from -51,472 to 5,626 minutes due to clock errors. Filtered to a 1–60 minute range based on inspecting percentiles (75th percentile was ~18.3 minutes).
+- `trip_distance` included values as large as 276,423 miles. Filtered to a 0–100 mile range.
+- Applying these two filters dropped the baseline model's validation RMSE from ~26 minutes to ~4.3 minutes, confirming the unfiltered outliers were dominating the error metric rather than reflecting genuine model quality.
+
+## Feature Engineering Notes
+
+- `PULocationID`/`DOLocationID` (263 raw zone IDs) were grouped into `PUBorough`/`DOBorough` (6-7 categories) using the NYC TLC zone lookup table, trading some location granularity for a much smaller, faster one-hot feature space (~520 columns down to ~18).
+- `trip_distance` is used as a feature, which is worth flagging as a limitation: in a real pre-trip duration prediction scenario, the exact final distance wouldn't be known in advance, only an estimate. This dataset's recorded distance is a bit of a shortcut for this exercise.
+- Fare/payment-related columns (fare_amount, tip_amount, etc.) were deliberately excluded as features since they're computed from the trip itself and would leak information about duration rather than genuinely predict it.
+
+
 # Model Deployment Project
 
 Use this repository as a **template** for your model deployment project. You will train a regression model that predicts the duration of NYC Yellow Taxi trips, track your experiments locally with MLflow, and serve predictions through a FastAPI app on your own machine. Create pull requests in your own copy even if you are working alone, and use them to track your progress.
