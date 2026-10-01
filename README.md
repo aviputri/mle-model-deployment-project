@@ -1,9 +1,17 @@
+# Model Deployment Project
+Avi Putri Pertiwi
+
+01.10.2026
+
 ## Scripts
 
-- `notebooks/01.experioments.ipynb`: Jupyter notebook for experimenting the codes
+- `notebooks/01.experiments.ipynb`: Jupyter notebook for experimenting the codes
 - `src/features.py`: Reusable data preparation
 - `src/train.py`: Train and predict model
+- `src/predict.py`: Predict model
+- `src/tune.py`: Tune model parameters
 - `app/main.py` and `schemas.py`: FastAPI application and prediction schema.
+- `test/test_features.py`: Test the `src/features.py` script
 
 ## Results
 
