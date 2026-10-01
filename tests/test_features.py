@@ -14,11 +14,11 @@ def test_compute_target():
 
 def test_add_time_features():
     df = pd.DataFrame({
-        "tpep_pickup_datetime": pd.to_datetime(["2025-01-06 14:30:00"]),  # a Tuesday
+        "tpep_pickup_datetime": pd.to_datetime(["2025-01-06 14:30:00"]),  # a Monday
     })
     result = add_time_features(df)
     assert result["pickup_hour"].iloc[0] == 14
-    assert result["pickup_dayofweek"].iloc[0] == 1  # Monday=0, Tuesday=1
+    assert result["pickup_dayofweek"].iloc[0] == 0  # Monday=0
 
 
 def test_filter_outliers_duration():

@@ -19,7 +19,12 @@ Avi Putri Pertiwi
 
 The final RandomForestRegressor (100 trees, max_depth=20, min_samples_leaf=5) achieves a validation RMSE of **4.304** minutes, trained on the January 2025 NYC Yellow Taxi dataset after cleaning.
 
-## Data Cleaning Notes
+**What I would do differently if I have more time**
+
+- Proper data cleaning framework since the beginning. I forgot to check and filter out the trip distance and number of passenger distribution before training the model, hence the model training became expansive and took too long to run. The running time became normal after these steps were implemented.
+- Start testing the model training with smaller training data subset to ensure everything works properly, only after everything works the whole training datasets should be used
+
+## Data Cleaning
 
 The Taxi data needed filtering before training:
 
@@ -27,12 +32,34 @@ The Taxi data needed filtering before training:
 - `trip_distance` included values as large as 276,423 miles. Filtered to a 0–100 mile range.
 - Applying these two filters dropped the baseline model's validation RMSE from ~26 minutes to ~4.3 minutes, confirming the unfiltered outliers were dominating the error metric rather than reflecting genuine model quality.
 
-## Feature Engineering Notes
+## Feature Engineering
 
 - `PULocationID`/`DOLocationID` (263 raw zone IDs) were grouped into `PUBorough`/`DOBorough` (6-7 categories) using the NYC TLC zone lookup table, trading some location granularity for a much smaller, faster one-hot feature space (~520 columns down to ~18).
 - `trip_distance` is used as a feature, which is worth flagging as a limitation: in a real pre-trip duration prediction scenario, the exact final distance wouldn't be known in advance, only an estimate. This dataset's recorded distance is a bit of a shortcut for this exercise.
 - Fare/payment-related columns (fare_amount, tip_amount, etc.) were deliberately excluded as features since they're computed from the trip itself and would leak information about duration rather than genuinely predict it.
 
+## Parameter Tuning
+
+Best parameters found:
+```python
+{'n_estimators': 150, 'min_samples_leaf': 2, 'max_depth': 15}
+```
+
+## Testing
+```python
+tests/test_features.py::test_compute_target PASSED                                                                         [ 20%]
+tests/test_features.py::test_add_time_features PASSED                                                                      [ 40%]
+tests/test_features.py::test_filter_outliers_duration PASSED                                                               [ 60%]
+tests/test_features.py::test_filter_outliers_distance PASSED                                                               [ 80%]
+tests/test_features.py::test_impute_missing PASSED                                                                         [100%]
+```
+
+
+-------------------------------------------------------
+
+(Original ReadMe below)
+
+-------------------------------------------------------
 
 # Model Deployment Project
 
