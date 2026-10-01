@@ -23,6 +23,11 @@ The final RandomForestRegressor (100 trees, max_depth=20, min_samples_leaf=5) ac
 
 - Proper data cleaning framework since the beginning. I forgot to check and filter out the trip distance and number of passenger distribution before training the model, hence the model training became expansive and took too long to run. The running time became normal after these steps were implemented.
 - Start testing the model training with smaller training data subset to ensure everything works properly, only after everything works the whole training datasets should be used
+- I would add running time to the parameter tuning script to track how much time needed to optimize and rerun the best model. This can be used as a deciding factor whether or not this step is worth it for this model specifically
+
+--------------------------------------------
+
+# Main Tasks
 
 ## Data Cleaning
 
@@ -38,12 +43,22 @@ The Taxi data needed filtering before training:
 - `trip_distance` is used as a feature, which is worth flagging as a limitation: in a real pre-trip duration prediction scenario, the exact final distance wouldn't be known in advance, only an estimate. This dataset's recorded distance is a bit of a shortcut for this exercise.
 - Fare/payment-related columns (fare_amount, tip_amount, etc.) were deliberately excluded as features since they're computed from the trip itself and would leak information about duration rather than genuinely predict it.
 
+--------------------------------------------
+# Stretch Tasks
+
 ## Parameter Tuning
 
 Best parameters found:
 ```python
 {'n_estimators': 150, 'min_samples_leaf': 2, 'max_depth': 15}
 ```
+Tuned model validation RMSE: 4.298
+
+The tuned model is only slightly better than the baseline: an improvement of about 0.006 minutes, which is negligible in practice.
+
+It is possible that Random Forests tend to be fairly robust to hyperparameter choices within a reasonable range (unlike more tuning-sensitive models such as gradient boosting), and the baseline's hyperparameters were already in a reasonable operating zone.
+
+Given the added complexity and runtime, **parameter tuning was not worth it for this baseline**. The real ceiling on model performance is more likely the limited feature set (coarse borough-level location, no traffic/weather data) than the model's hyperparameters.
 
 ## Testing
 ```python
