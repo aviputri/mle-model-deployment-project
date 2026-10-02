@@ -199,7 +199,7 @@ Once you have implemented the project code, a typical local workflow looks like 
 2. Start the tracking UI:
 
    ```bash
-   uv run mlflow ui --backend-store-uri ./mlruns --port 5000
+   uv run mlflow ui --backend-store-uri sqlite:///mlflow.db --port 5000
    ```
 
 3. Run the API locally:
